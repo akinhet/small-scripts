@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# https://github.com/Jack12816/colorpicker.git
+colorpicker --short --one-shot | xclip -selection clipboard
