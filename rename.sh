@@ -3,17 +3,19 @@
 # https://imagemagick.org/
 # https://0xacab.org/jvoisin/mat2
 
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 for file in *.png *.jpg *.jpeg; do
 	if [ -f "$file" ]; then
-		newname=$RANDOM
+		tmpname="$RANDOM.png"
 		if [[ $(file --mime-type -b $file) != "image/png" ]]; then
-			magick convert "$file" "$newname.png"
+			magick convert "$file" "$tmpname"
 			rm "$file"
 		else
-			mv "$file" "$newname.png"
+			mv "$file" "$tmpname"
 		fi
-		mat2 --inplace "$newname.png"
+		mat2 --inplace "$tmpname"
+		newname=$(md5sum "$tmpname" | awk '{ print $1".png" }')
+		mv "$tmpname" "$newname"
 	fi
 done
